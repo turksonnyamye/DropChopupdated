@@ -32,6 +32,9 @@ class _BuyerPageState extends State<BuyerPage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
+  String _userName = '';
+  String _userEmail = '';
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +42,16 @@ class _BuyerPageState extends State<BuyerPage> {
       if (mounted) setState(() {});
     });
     _loadCurrentLocation();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    setState(() {
+      _userName = prefs.getString('userName') ?? 'DropChop User';
+      _userEmail = prefs.getString('userEmail') ?? '';
+    });
   }
 
   @override
@@ -869,13 +882,13 @@ class _BuyerPageState extends State<BuyerPage> {
     return ListView(
       padding: const EdgeInsets.all(24.0),
       children: [
-        const Center(
+        Center(
           child: Column(
             children: [
-              CircleAvatar(radius: 46, backgroundColor: brandGreen, child: Icon(Icons.person, size: 46, color: Colors.white)),
-              SizedBox(height: 12),
-              Text('Adwoa Mensah', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-              Text('adwoa.mensah@gmail.com', style: TextStyle(color: Colors.grey)),
+              const CircleAvatar(radius: 46, backgroundColor: brandGreen, child: Icon(Icons.person, size: 46, color: Colors.white)),
+              const SizedBox(height: 12),
+              Text(_userName, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              Text(_userEmail, style: const TextStyle(color: Colors.grey)),
             ],
           ),
         ),
@@ -888,8 +901,13 @@ class _BuyerPageState extends State<BuyerPage> {
         ListTile(
           leading: const Icon(Icons.logout, color: Colors.red),
           title: const Text('Sign Out'),
-          onTap: () {
-            Navigator.of(context).pushReplacementNamed('/welcome');
+          onTap: () async {
+            final SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setBool('isLoggedIn', false);
+            await prefs.remove('userRole');
+            if (context.mounted) {
+              Navigator.of(context).pushReplacementNamed('/welcome');
+            }
           },
         ),
       ],

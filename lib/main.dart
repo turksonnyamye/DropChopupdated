@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart'; // Re-added Firebase Core
 import 'firebase_options.dart'; // Re-added Firebase Options config file
 
+import 'screens/splash_screen.dart';
 import 'screens/welcome_page.dart'; 
 import 'screens/sign_in_page.dart';
 import 'screens/sign_up_page.dart'; 
@@ -78,8 +79,13 @@ class DropchopApp extends StatelessWidget {
           primary: const Color(0xFF32BB78),
         ),
       ),
-      initialRoute: initialRoute,
+      // The app always opens on the splash screen first. Everything else
+      // below is exactly what you had — the splash screen just shows
+      // briefly, then hands off to whichever route was already computed
+      // above in main().
+      initialRoute: '/splash',
       routes: {
+        '/splash': (context) => DropchopSplashScreen(nextRoute: initialRoute),
         '/welcome': (context) => const WelcomePage(),
         '/signin': (context) => const SignInPage(),
         '/signup': (context) => const SignUpPage(),

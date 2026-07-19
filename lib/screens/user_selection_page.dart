@@ -81,7 +81,7 @@ class UserSelectionPage extends StatelessWidget {
                 subtitle: "Manage inventory, set operations, and track platform sales.",
                 icon: Icons.storefront_outlined,
                 imagePath: 'images/roles/vendor.jpg',
-                routeName: '/vendorHome',
+                routeName: '/vendorSelect',
               ),
               const SizedBox(height: 40),
             ],
